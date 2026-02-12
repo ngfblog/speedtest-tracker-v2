@@ -68,7 +68,7 @@ class OoklaTester implements SpeedtestProvider
         $server = SettingsHelper::get('server')['value'];
 
         $binPath = app_path() . DIRECTORY_SEPARATOR . 'Bin' . DIRECTORY_SEPARATOR . 'speedtest';
-        $homePrefix = config('speedtest.home') . ' && ';
+        $homePrefix = config('speedtest.home') ? config('speedtest.home') . ' && ' : '';
 
         if ($server != '' && $server != false) {
             $server = explode(',', $server);

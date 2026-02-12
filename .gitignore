@@ -17,3 +17,16 @@ _ide_helper.php
 .idea
 .config
 reports/
+backup-config/
+config/
+speedtest-fixed-backup.tar
+*.old
+build.log
+docker-config/
+HistoryGraph.js
+TableRow.js
+HomepageDataController.php
+Dockerfile.txt
+.dockerignore-old
+gitignore
+resources/resources/

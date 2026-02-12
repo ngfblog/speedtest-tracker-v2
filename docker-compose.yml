@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  speedtest:
+    build: .
+    container_name: speedtest
+    image: speedtest-fixed:latest
+    ports:
+      - "8766:80"
+    volumes:
+      - ./data:/config
+    environment:
+      - OOKLA_EULA_GDPR=true
+    restart: unless-stopped

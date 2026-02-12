@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Axios from 'axios';
-import Widget from './Widget';
-import { Container, Row, Spinner } from 'react-bootstrap';
-import { Col } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
+import { Spinner, Container, Row, Col, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 export default class LatestResults extends Component {
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             data: props.data,
-            interval: null,
             loading: true,
         }
     }
 
+    componentDidMount = () => {
+    }
+
     componentDidUpdate() {
-        if(this.state.data !== this.props.data) {
+        if(this.state.data != this.props.data) {
             this.setState({
                 data: this.props.data,
                 loading: false,
@@ -27,134 +26,101 @@ export default class LatestResults extends Component {
         }
     }
 
-    componentWillUnmount() {
-        clearInterval(this.state.interval);
-    }
-
     newScan = () => {
-        var url = 'api/speedtest/run?token=' + window.token;
-
+        var url = 'api/speedtest/run';
         Axios.get(url)
         .then((resp) => {
             toast.info('A test has been queued. This page will refresh when the test has finished.');
         })
-        .catch((err) => {
-            if(err.response) {
-                if(err.response.status == 429) {
-                    toast.error('You are doing that too much. Try again later.');
-                }
-                console.log(err.response);
-            } else {
-                console.log(err.data);
-            }
-        })
+        .catch((error) => {
+            toast.error('There was an error queuing the speedtest.');
+        });
     }
 
     render() {
         var loading = this.state.loading;
         var data = this.state.data;
 
-        if(loading && data !== false) {
+        if(loading) {
             return (
-                <Container fluid>
-                    <Row>
-                        <Col sm={{ span: 12 }}>
-                            <Spinner animation="grow" />
-                        </Col>
-                    </Row>
-                </Container>
-            );
-        } else if(data === false) {
-            if( (window.config.auth == true && window.authenticated == true) || window.config.auth == false) {
+                <div>
+                    <Spinner animation="grow" />
+                </div>
+            )
+        } else {
+            if(data !== null) {
                 return (
-                    <Container fluid>
+                    <Container className="mb-4" fluid>
                         <Row>
-                            <Col sm={{ span: 12 }} className="text-center">
-                                <div>
+                            <Col lg={{ span: 4 }} md={{ span: 4 }} sm={{ span: 12 }} xs={{ span: 12 }}>
+                                <div className="stat-card shadow-sm">
+                                    <div className="stat-header">
+                                        <i className="ti-signal stat-icon green"></i>
+                                        <h5 className="stat-title">Ping</h5>
+                                    </div>
+                                    <div className="stat-body">
+                                        <h1 className="stat-value">{data.data.ping}</h1>
+                                        <p className="stat-unit">ms (current)</p>
+                                        <p className="stat-subtext">NaN ms (average)</p>
+                                        <p className="stat-subtext">NaN ms (maximum)</p>
+                                        <p className="stat-subtext">NaN ms (minimum)</p>
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col lg={{ span: 4 }} md={{ span: 4 }} sm={{ span: 12 }} xs={{ span: 12 }}>
+                                <div className="stat-card shadow-sm">
+                                    <div className="stat-header">
+                                        <i className="ti-download stat-icon orange"></i>
+                                        <h5 className="stat-title">Download</h5>
+                                    </div>
+                                    <div className="stat-body">
+                                        <h1 className="stat-value">{data.data.download}</h1>
+                                        <p className="stat-unit">Mbit/s (current)</p>
+                                        <p className="stat-subtext">NaN Mbit/s (average)</p>
+                                        <p className="stat-subtext">NaN Mbit/s (maximum)</p>
+                                        <p className="stat-subtext">NaN Mbit/s (minimum)</p>
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col lg={{ span: 4 }} md={{ span: 4 }} sm={{ span: 12 }} xs={{ span: 12 }}>
+                                <div className="stat-card shadow-sm">
+                                    <div className="stat-header">
+                                        <i className="ti-upload stat-icon blue"></i>
+                                        <h5 className="stat-title">Upload</h5>
+                                    </div>
+                                    <div className="stat-body">
+                                        <h1 className="stat-value">{data.data.upload}</h1>
+                                        <p className="stat-unit">Mbit/s (current)</p>
+                                        <p className="stat-subtext">NaN Mbit/s (average)</p>
+                                        <p className="stat-subtext">NaN Mbit/s (maximum)</p>
+                                        <p className="stat-subtext">NaN Mbit/s (minimum)</p>
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col sm={{ span: 12 }}>
+                                <div className="text-center mt-4">
+                                    <Button className="d-inline-block mx-3 mb-2" variant="primary" onClick={this.newScan}>Test again</Button>
+                                    <p className="text-muted mb-0 d-inline-block">Last test performed at: {new Date(data.data.created_at).toLocaleString()}</p>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Container>
+                )
+            } else {
+                return (
+                    <Container className="mb-4" fluid>
+                        <Row>
+                            <Col sm={{ span: 12 }}>
+                                <div className="text-center">
                                     <Button variant="primary" onClick={this.newScan}>Start your first test!</Button>
                                 </div>
                             </Col>
                         </Row>
                     </Container>
                 );
-            } else if(window.config.auth == true && window.authenticated == false) {
-                return (
-                    <Container fluid>
-                        <Row>
-                            <Col sm={{ span: 12 }} className="text-center">
-                                <div>
-                                    <p>Please login to run the first test</p>
-                                </div>
-                            </Col>
-                        </Row>
-                    </Container>
-                );
             }
-        } else {
-            return (
-                <Container fluid>
-                    <Row>
-                        <Col sm={{ span: 12 }} className="text-center mb-2">
-                            <div>
-                                {(window.config.auth == true && window.authenticated == true) || window.config.auth == false ?
-                                    <div>
-                                        <Button className="d-inline-block mx-3 mb-2" variant="primary" onClick={this.newScan}>Test again</Button>
-                                        <p className="text-muted mb-0 d-inline-block">Last test performed at: {new Date(data.data.created_at).toLocaleString()}</p>
-                                    </div>
-                                :
-                                    <div>
-                                        <p className="text-muted mb-0 d-inline-block">Last test performed at: {new Date(data.data.created_at).toLocaleString()}</p>
-                                    </div>
-                                }
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col
-                            lg={{ span: 4 }}
-                            md={{ span: 4 }}
-                            sm={{ span: 12 }}
-                            className="my-2"
-                        >
-                            <Widget
-                                title="Ping"
-                                data={data}
-                                failed={data.data.failed}
-                                unit="ms"
-                                icon="ping"
-                            />
-                        </Col>
-                        <Col
-                            lg={{ span: 4 }}
-                            md={{ span: 4 }}
-                            sm={{ span: 12 }}
-                            className="my-2"
-                        >
-                            <Widget
-                                title="Download"
-                                data={data}
-                                failed={data.data.failed}
-                                unit="Mbit/s"
-                                icon="dl"
-                            />
-                        </Col>
-                        <Col
-                            lg={{ span: 4 }}
-                            md={{ span: 4 }}
-                            sm={{ span: 12 }}
-                            className="my-2"
-                        >
-                            <Widget
-                                title="Upload"
-                                data={data}
-                                failed={data.data.failed}
-                                unit="Mbit/s"
-                                icon="ul"
-                            />
-                        </Col>
-                    </Row>
-                </Container>
-            );
         }
     }
 }

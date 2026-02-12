@@ -6,6 +6,24 @@ import { Line, Bar } from 'react-chartjs-2';
 import { Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
+function formatDate(date) {
+    var d = new Date(date);
+    var day = String(d.getDate()).padStart(2, '0');
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var year = String(d.getFullYear()).slice(-2);
+    var hours = String(d.getHours()).padStart(2, '0');
+    var minutes = String(d.getMinutes()).padStart(2, '0');
+    return day + '/' + month + '/' + year + ' ' + hours + ':' + minutes;
+}
+
+function formatDateShort(date) {
+    var d = new Date(date);
+    var day = String(d.getDate()).padStart(2, '0');
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var year = String(d.getFullYear()).slice(-2);
+    return day + '/' + month + '/' + year;
+}
+
 export default class HistoryGraph extends Component {
     constructor(props) {
         super(props)
@@ -188,8 +206,8 @@ export default class HistoryGraph extends Component {
             duData.datasets[0].data.push(download);
             duData.datasets[1].data.push(upload);
             pingData.datasets[0].data.push(ping);
-            duData.labels.push(new Date(e.created_at).toLocaleString());
-            pingData.labels.push(new Date(e.created_at).toLocaleString());
+            duData.labels.push(formatDate(e.created_at));
+            pingData.labels.push(formatDate(e.created_at));
         });
 
         this.setState({
@@ -242,7 +260,7 @@ export default class HistoryGraph extends Component {
             var fail = {x: e.date, y: e.failure};
             failData.datasets[0].data.push(success);
             failData.datasets[1].data.push(fail);
-            failData.labels.push(new Date(e.date).toLocaleString([], {year: '2-digit', month:'2-digit', day:'2-digit'}));
+            failData.labels.push(formatDateShort(e.date));
         })
 
         this.setState({

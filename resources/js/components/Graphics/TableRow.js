@@ -4,6 +4,17 @@ import { Modal, Button } from 'react-bootstrap';
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 
+function formatDate(date) {
+    var d = new Date(date);
+    var day = String(d.getDate()).padStart(2, '0');
+    var month = String(d.getMonth() + 1).padStart(2, '0');
+    var year = String(d.getFullYear()).slice(-2);
+    var hours = String(d.getHours()).padStart(2, '0');
+    var minutes = String(d.getMinutes()).padStart(2, '0');
+    var seconds = String(d.getSeconds()).padStart(2, '0');
+    return day + '/' + month + '/' + year + ', ' + hours + ':' + minutes + ':' + seconds;
+}
+
 export default class TableRow extends Component {
     constructor(props) {
         super(props)
@@ -58,7 +69,7 @@ export default class TableRow extends Component {
             let value = data[key];
 
             if(field.type === 'date') {
-                value = new Date(value).toLocaleString();
+                value = formatDate(value);
             } else if(field.type === 'bool') {
                 value = Boolean(value) ? field.if_true : field.if_false
             }
@@ -137,7 +148,7 @@ export default class TableRow extends Component {
                     {fields.visible.map((e, i) => {
                         console.log(e);
                         if(e.name === 'created_at') {
-                            return <td key={i}>{new Date(e.value).toLocaleString()}</td>
+                            return <td key={i}>{formatDate(e.value)}</td>
                         } else if (e.name === 'id') {
                             return <td key={i}>{e.value}</td>
                         }
