@@ -3,12 +3,11 @@
 namespace Tests\Unit\Controllers\IntegrationsController;
 
 use App;
-use App\Helpers\SettingsHelper;
 use App\Http\Controllers\IntegrationsController;
 use Henrywhitaker3\Healthchecks\Healthchecks;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
-use Mockery;
 
 class HealthcheckTest extends TestCase
 {
@@ -29,11 +28,18 @@ class HealthcheckTest extends TestCase
 
         $this->controller = new IntegrationsController();
         $this->uuid = '123e4567-e89b-12d3-a456-426614174000';
-        $this->bindMockFacade($this->uuid, true);
+
+        App::bind('healthcheck', function() {
+            return new Healthchecks($this->uuid);
+        });
     }
 
     public function testStartPing()
     {
+        Http::fake([
+            '*' => Http::response('', 200),
+        ]);
+
         $resp = $this->controller->testHealthchecks('start')->original;
 
         $this->assertEquals([
@@ -44,6 +50,10 @@ class HealthcheckTest extends TestCase
 
     public function testSuccessPing()
     {
+        Http::fake([
+            '*' => Http::response('', 200),
+        ]);
+
         $resp = $this->controller->testHealthchecks('success')->original;
 
         $this->assertEquals([
@@ -54,6 +64,10 @@ class HealthcheckTest extends TestCase
 
     public function testFailPing()
     {
+        Http::fake([
+            '*' => Http::response('', 200),
+        ]);
+
         $resp = $this->controller->testHealthchecks('fail')->original;
 
         $this->assertEquals([
@@ -64,7 +78,9 @@ class HealthcheckTest extends TestCase
 
     public function testInvalidUUID()
     {
-        $this->bindMockFacade('test', false);
+        App::bind('healthcheck', function() {
+            return new Healthchecks('invalid-uuid');
+        });
 
         $resp = $this->controller->testHealthchecks('start')->original;
 
@@ -73,25 +89,5 @@ class HealthcheckTest extends TestCase
             'success' => false,
             'error' => 'Invalid UUID'
         ], $resp);
-
-        $this->bindMockFacade($this->uuid, true);
-    }
-
-    private function bindMockFacade(string $uuid, bool $isValid)
-    {
-        $mock = Mockery::mock(Healthchecks::class, [$uuid])->makePartial();
-        
-        $mock->shouldReceive('validate')->byDefault();
-
-        if ($isValid) {
-            $mock->shouldReceive('start')->andReturnSelf();
-            $mock->shouldReceive('success')->andReturnSelf();
-            $mock->shouldReceive('fail')->andReturnSelf();
-            $mock->shouldReceive('ping')->andReturn(true);
-        }
-
-        App::bind('healthcheck', function() use ($mock) {
-            return $mock;
-        });
     }
 }
