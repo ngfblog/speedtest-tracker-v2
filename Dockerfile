@@ -1,10 +1,10 @@
-#FROM henrywhitaker3/speedtest-tracker
-FROM lscr.io/linuxserver/speedtest-tracker:latest
+FROM henrywhitaker3/speedtest-tracker
 
-# Install Node.js for building
-RUN apk add --no-cache nodejs npm 2>/dev/null || \
-    apt-get update && apt-get install -y nodejs npm 2>/dev/null || \
-    true
+# Install modern Node.js (Node 20) via Nodesource instead of legacy apk/apt
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /site
 
@@ -12,7 +12,7 @@ WORKDIR /site
 COPY src/HistoryGraph.js /site/resources/js/components/Graphics/HistoryGraph.js
 COPY src/TableRow.js /site/resources/js/components/Graphics/TableRow.js
 
-# Build the JS bundle
+# Build the JS bundle with modern Node
 RUN npm install && npm run production
 
 # Copy fixed PHP controller ($days passed correctly to actions)
