@@ -1,4 +1,5 @@
-FROM henrywhitaker3/speedtest-tracker
+#FROM henrywhitaker3/speedtest-tracker
+FROM lscr.io/linuxserver/speedtest-tracker:latest
 
 # Install Node.js for building
 RUN apk add --no-cache nodejs npm 2>/dev/null || \
