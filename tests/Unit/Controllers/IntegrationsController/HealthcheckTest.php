@@ -8,6 +8,7 @@ use App\Http\Controllers\IntegrationsController;
 use Henrywhitaker3\Healthchecks\Healthchecks;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Mockery;
 
 class HealthcheckTest extends TestCase
 {
@@ -27,9 +28,8 @@ class HealthcheckTest extends TestCase
         parent::setUp();
 
         $this->controller = new IntegrationsController();
-
         $this->uuid = '123e4567-e89b-12d3-a456-426614174000';
-        $this->bindFacade($this->uuid);
+        $this->bindMockFacade($this->uuid, true);
     }
 
     public function testStartPing()
@@ -64,7 +64,7 @@ class HealthcheckTest extends TestCase
 
     public function testInvalidUUID()
     {
-        $this->bindFacade('test');
+        $this->bindMockFacade('test', false);
 
         $resp = $this->controller->testHealthchecks('start')->original;
 
@@ -74,21 +74,24 @@ class HealthcheckTest extends TestCase
             'error' => 'Invalid UUID'
         ], $resp);
 
-        $this->bindFacade($this->uuid);
+        $this->bindMockFacade($this->uuid, true);
     }
 
-    /**
-     * As clean install before setting up, there is no healthchecks
-     * uuid in the db, so the facade doesn't get created during boot,
-     * now just bind it in the container on test setup
-     *
-     * @param String $uuid
-     * @return void
-     */
-    private function bindFacade(String $uuid)
+    private function bindMockFacade(string $uuid, bool $isValid)
     {
-        App::bind('healthcheck', function() use ($uuid) {
-            return new Healthchecks($uuid);
+        $mock = Mockery::mock(Healthchecks::class, [$uuid])->makePartial();
+        
+        if ($isValid) {
+            $mock->shouldReceive('start')->andReturnSelf();
+            $mock->shouldReceive('success')->andReturnSelf();
+            $mock->shouldReceive('fail')->andReturnSelf();
+            $mock->shouldReceive('ping')->andReturn(true);
+        } else {
+            // Simulate invalid UUID behavior or exception if needed
+        }
+
+        App::bind('healthcheck', function() use ($mock) {
+            return $mock;
         });
     }
 }
