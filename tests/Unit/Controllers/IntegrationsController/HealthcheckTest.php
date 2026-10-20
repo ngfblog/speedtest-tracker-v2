@@ -28,7 +28,7 @@ class HealthcheckTest extends TestCase
 
         $this->controller = new IntegrationsController();
 
-        $this->uuid = env('HEALTHCHECKS_UUID');
+        $this->uuid = env('HEALTHCHECKS_UUID', '123e4567-e89b-12d3-a456-426614174000');
         $this->bindFacade($this->uuid);
     }
 
