@@ -81,13 +81,13 @@ class HealthcheckTest extends TestCase
     {
         $mock = Mockery::mock(Healthchecks::class, [$uuid])->makePartial();
         
+        $mock->shouldReceive('validate')->byDefault();
+
         if ($isValid) {
             $mock->shouldReceive('start')->andReturnSelf();
             $mock->shouldReceive('success')->andReturnSelf();
             $mock->shouldReceive('fail')->andReturnSelf();
             $mock->shouldReceive('ping')->andReturn(true);
-        } else {
-            // Simulate invalid UUID behavior or exception if needed
         }
 
         App::bind('healthcheck', function() use ($mock) {
