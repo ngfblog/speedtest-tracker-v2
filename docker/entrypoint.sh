@@ -42,6 +42,10 @@ if [ -d /site/vendor ]; then
     rm -rf /config/www/vendor
 fi
 cp -rfT /site/ /config/www/
+# Caches written by the old image list packages that are not installed here (e.g. the
+# require-dev facade/ignition) and break every artisan call; Laravel rebuilds them
+find /config/www/bootstrap/cache -maxdepth 1 -type f -name '*.php' -delete
+find /config/www/storage/framework/views -type f ! -name .gitignore -delete
 
 # --- Database ---
 if [ ! -f /config/speed.db ]; then

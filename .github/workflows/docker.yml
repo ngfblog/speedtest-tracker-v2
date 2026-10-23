@@ -50,6 +50,10 @@ jobs:
       - name: Smoke test with an empty /config volume
         run: docker/smoke-test.sh speedtest-tracker:ci 8080
 
+      # A /config volume initialised by the old public image must keep working
+      - name: Upgrade test from the old image
+        run: docker/upgrade-test.sh nirgf/speedtest-tracker-v2:latest speedtest-tracker:ci 8081
+
       - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
