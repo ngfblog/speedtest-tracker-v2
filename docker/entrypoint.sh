@@ -66,17 +66,17 @@ sed -i "s,DB_DATABASE=.*,DB_DATABASE=/config/speed.db," /config/www/.env
 mkdir -p /config/log/speedtest /config/www/storage/clockwork
 chown -R abc:"$grp" /config
 
-# --- Ookla CLI ---
-if [ ! -f /config/www/app/Bin/speedtest ]; then
-    echo "ERROR: /config/www/app/Bin/speedtest is missing"
-    exit 1
+# --- Ookla CLI (built into /site/app/Bin, copied above by cp -rfT) ---
+if [ -f /config/www/app/Bin/speedtest ]; then
+    chmod +x /config/www/app/Bin/speedtest
+    # Accept the license for HOME=/config (as the old image did) and for HOME=/config/www,
+    # which is the HOME the app sets when it runs the CLI (config/speedtest.php)
+    for home in /config /config/www; do
+        su-exec abc env HOME="$home" timeout 5s /config/www/app/Bin/speedtest --accept-license --accept-gdpr > /dev/null 2>&1
+    done
+else
+    echo "WARNING: /config/www/app/Bin/speedtest is missing, speedtests will fail"
 fi
-chmod +x /config/www/app/Bin/speedtest
-# Accept the license for HOME=/config (as the old image did) and for HOME=/config/www,
-# which is the HOME the app sets when it runs the CLI (config/speedtest.php)
-for home in /config /config/www; do
-    su-exec abc env HOME="$home" timeout 5s /config/www/app/Bin/speedtest --accept-license --accept-gdpr > /dev/null 2>&1
-done
 
 echo "Running database migrations"
 run_as_abc php /config/www/artisan migrate --force

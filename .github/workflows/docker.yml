@@ -31,14 +31,7 @@ jobs:
         id: tags
         run: echo "date=$(date -u +%Y%m%d)" >> "$GITHUB_OUTPUT"
 
-      - name: Log in to Docker Hub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build (and push except on pull requests)
+      - name: Build image
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -46,9 +39,33 @@ jobs:
           pull: true
           # The weekly run ignores the cache so Alpine packages (nginx etc.) are refreshed too
           no-cache: ${{ github.event_name == 'schedule' }}
-          push: ${{ github.event_name != 'pull_request' }}
+          load: true
+          tags: speedtest-tracker:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Check the image does not reference the old images
+        run: docker/check-references.sh speedtest-tracker:ci
+
+      - name: Smoke test with an empty /config volume
+        run: docker/smoke-test.sh speedtest-tracker:ci 8080
+
+      - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Same inputs as "Build image", so every layer comes from the build cache
+      - name: Push
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
           tags: |
             ${{ env.IMAGE }}:php83
             ${{ env.IMAGE }}:php83-${{ steps.tags.outputs.date }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max

@@ -32,22 +32,16 @@ COPY --from=assets /app/public /site/public
 COPY src/HomepageDataController.php /site/app/Http/Controllers/HomepageDataController.php
 RUN rm -rf /site/src /site/docker /site/Dockerfile /site/docker-compose.yml
 
-# Ookla Speedtest CLI (statically linked). The old image downloaded it on first start;
-# it is now part of the image so a fresh /config works without network access to install.speedtest.net.
-ARG OOKLA_VERSION=1.2.0
-ARG TARGETARCH
+# Ookla Speedtest CLI (statically linked), same version and URL pattern as the old init script,
+# but downloaded at build time so the image needs nothing else on first start
+ARG OOKLA_VERSION=1.0.0
 RUN set -e; \
-    case "${TARGETARCH:-amd64}" in \
-        amd64) arch=x86_64 ;; \
-        arm64) arch=aarch64 ;; \
-        arm) arch=armhf ;; \
-        386) arch=i386 ;; \
-        *) echo "Unsupported architecture: ${TARGETARCH}"; exit 1 ;; \
-    esac; \
-    wget -qO /tmp/speedtest.tgz "https://install.speedtest.net/app/cli/ookla-speedtest-${OOKLA_VERSION}-linux-${arch}.tgz"; \
+    arch="$(uname -m)"; \
+    wget -qO /tmp/speedtest.tgz "https://install.speedtest.net/app/cli/ookla-speedtest-${OOKLA_VERSION}-${arch}-linux.tgz"; \
     tar -xzf /tmp/speedtest.tgz -C /site/app/Bin speedtest; \
     rm /tmp/speedtest.tgz; \
-    chmod +x /site/app/Bin/speedtest
+    chmod +x /site/app/Bin/speedtest; \
+    /site/app/Bin/speedtest --version | head -n 1
 
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/zzz-app.conf /usr/local/etc/php-fpm.d/zzz-app.conf

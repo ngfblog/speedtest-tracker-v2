@@ -19,3 +19,4 @@ docker-config
 build.log
 !storage/**/.gitignore
 !bootstrap/cache/.gitignore
+README.md
