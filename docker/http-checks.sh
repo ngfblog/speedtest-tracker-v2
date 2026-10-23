@@ -1,0 +1,30 @@
+# Shared HTTP checks for smoke-test.sh and upgrade-test.sh (sourced, not executed).
+# check_http BASE_URL: fetches "/", then requires HTTP 200 and a non-empty body for
+# every <script src> and <link href> path in the page and for the main API endpoints.
+# Needs at least one speedtest row (/api/speedtest/latest is 404 on an empty table).
+# Returns non-zero if any check fails.
+
+check_http() {
+    local base="$1" fail=0 page path code size
+    local -a paths
+    page="$(curl -sS "$base/")"
+    mapfile -t paths < <(
+        grep -oiE '<(script|link)[^>]+(src|href)="[^"]+"' <<< "$page" \
+            | sed -E 's/.*(src|href)="([^"]+)"/\2/' \
+            | grep '^/' | sort -u
+    )
+    if [ "${#paths[@]}" -eq 0 ]; then
+        echo "FAIL: no <script src> / <link href> paths found in GET /"
+        return 1
+    fi
+    for path in "${paths[@]}" /api/speedtest/latest /api/speedtest/time/7 /api/speedtest/home/7 /api/settings/config; do
+        read -r code size < <(curl -s -o /dev/null -w '%{http_code} %{size_download}' "$base$path" || echo "000 0")
+        if [ "$code" = 200 ] && [ "${size%.*}" -gt 0 ]; then
+            echo "ok   $code ${size%.*} bytes  $path"
+        else
+            echo "FAIL $code ${size%.*} bytes  $path"
+            fail=1
+        fi
+    done
+    return "$fail"
+}

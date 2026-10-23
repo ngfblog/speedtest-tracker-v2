@@ -21,7 +21,7 @@ Route::get(SettingsHelper::getBase() . 'files/{path?}', function ($file) {
     $fileP = public_path() . '/' . $fileP;
     if (file_exists($fileP)) {
         $contents = File::get($fileP);
-        $mime = \GuzzleHttp\Psr7\mimetype_from_filename($fileP);
+        $mime = \GuzzleHttp\Psr7\MimeType::fromFilename($fileP) ?? 'application/octet-stream';
         return Response::make(File::get($fileP), 200, ['Content-type' => $mime]);
     } else {
         abort(404);

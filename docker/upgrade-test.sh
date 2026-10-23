@@ -12,6 +12,7 @@ port="${3:-8081}"
 old=speedtest-upgrade-old
 new=speedtest-upgrade-new
 config="$(mktemp -d)"
+. "$(dirname "$0")/http-checks.sh"
 
 cleanup() { docker rm -f "$old" "$new" > /dev/null 2>&1 || true; }
 cleanup
@@ -86,6 +87,8 @@ fail=0
 [ "$(docker inspect -f '{{.State.Running}}' "$new")" = true ] || { echo "FAIL: new container is not running"; fail=1; }
 code="$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$port/")"
 [ "$code" = 200 ] || { echo "FAIL: GET / returned $code"; fail=1; }
+echo "== assets and API"
+check_http "http://127.0.0.1:$port" || { echo "FAIL: assets or API endpoints"; fail=1; }
 fatal='PHP (Fatal|Parse) error|Fatal error|Uncaught|Class "?[A-Za-z\\]+"? not found|ErrorException|In [A-Za-z]+\.php line [0-9]+'
 if grep -E "$fatal" <<< "$logs"; then echo "FAIL: PHP errors in the container log"; fail=1; fi
 if grep -E '\.(ERROR|CRITICAL|EMERGENCY)' <<< "$new_logs"; then echo "FAIL: new errors in storage/logs"; fail=1; fi
@@ -104,4 +107,4 @@ echo "after upgrade: speedtests=$new_speedtests settings=$new_settings migration
 [ "$new_app_key" = "$old_app_key" ] || { echo "FAIL: APP_KEY changed"; fail=1; }
 
 [ "$fail" -eq 0 ] || exit 1
-echo "UPGRADE TEST PASSED: $old_image volume -> $new_image: HTTP 200, no PHP fatals, migrations OK, old rows and APP_KEY kept"
+echo "UPGRADE TEST PASSED: $old_image volume -> $new_image: HTTP 200 for the page, its assets and the API, no PHP fatals, migrations OK, old rows and APP_KEY kept"

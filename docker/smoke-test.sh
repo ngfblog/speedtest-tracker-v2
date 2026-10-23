@@ -10,6 +10,7 @@ image="${1:?usage: smoke-test.sh IMAGE [HOST_PORT]}"
 port="${2:-8080}"
 name=speedtest-smoke
 config="$(mktemp -d)"
+. "$(dirname "$0")/http-checks.sh"
 
 docker rm -f "$name" > /dev/null 2>&1 || true
 trap 'docker rm -f "$name" > /dev/null 2>&1 || true' EXIT
@@ -57,6 +58,16 @@ docker exec "$name" su-exec abc php /config/www/artisan migrate:status
 
 echo "== checks"
 [ "$code" = 200 ] || { echo "FAIL: GET / returned $code"; exit 1; }
+# One speedtest row, so /api/speedtest/latest has something to return
+docker exec -i "$name" su-exec abc php <<'PHP'
+<?php
+$db = new PDO('sqlite:/config/speed.db');
+$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db->exec("INSERT INTO speedtests (ping, download, upload, created_at, updated_at, server_name, scheduled, failed)
+           VALUES (12.34, 567.89, 98.76, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'smoke-test', 0, 0)");
+PHP
+echo "== assets and API"
+check_http "http://127.0.0.1:$port" || { echo "FAIL: assets or API endpoints"; exit 1; }
 docker exec "$name" test -s /config/speed.db || { echo "FAIL: /config/speed.db missing or empty"; exit 1; }
 status="$(docker exec "$name" su-exec abc php /config/www/artisan migrate:status)"
 if ! grep -q 'Yes' <<< "$status" || grep -qE '\|\s*No\s*\|' <<< "$status"; then
@@ -65,4 +76,4 @@ if ! grep -q 'Yes' <<< "$status" || grep -qE '\|\s*No\s*\|' <<< "$status"; then
 fi
 grep -q 'Downloading Speedtest CLI' <<< "$(docker logs "$name" 2>&1)" || { echo "FAIL: Ookla CLI was not downloaded on start"; exit 1; }
 docker exec "$name" test -x /config/www/app/Bin/speedtest || { echo "FAIL: /config/www/app/Bin/speedtest missing"; exit 1; }
-echo "SMOKE TEST PASSED: no Ookla CLI in the image; empty /config -> CLI downloaded, speed.db created, all migrations ran, HTTP 200 on port 80"
+echo "SMOKE TEST PASSED: no Ookla CLI in the image; empty /config -> CLI downloaded, speed.db created, all migrations ran, HTTP 200 on port 80 for the page, its assets and the API"
