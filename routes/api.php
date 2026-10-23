@@ -62,14 +62,13 @@ Route::group([
 ], function () {
     Route::get('changelog', [UpdateController::class, 'changelog'])
         ->name('update.changelog');
-    Route::get('check', [UpdateController::class, 'checkForUpdate'])
-        ->name('update.check');
-    Route::get('download', [UpdateController::class, 'downloadUpdate'])
-        ->name('update.download');
-    Route::get('extract', [UpdateController::class, 'extractUpdate'])
-        ->name('update.extract');
-    Route::get('move', [UpdateController::class, 'moveUpdate'])
-        ->name('update.move');
+    // The in-app self-updater is disabled: updates come from the Docker image.
+    // Explicit 404s, because unknown api/* paths would fall through to the React page.
+    foreach (['check', 'download', 'extract', 'move'] as $action) {
+        Route::get($action, function () {
+            abort(404);
+        })->name('update.' . $action);
+    }
 });
 
 Route::group([

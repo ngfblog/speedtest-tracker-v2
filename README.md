@@ -1,11 +1,12 @@
 # Speedtest Tracker - Fixed Version
 
-Based on [henrywhitaker3/speedtest-tracker](https://github.com/henrywhitaker3/speedtest-tracker) with the following fixes:
+Based on [henrywhitaker3/speedtest-tracker](https://github.com/henrywhitaker3/speedtest-tracker) (GPL-3.0) with the following fixes:
 
 ## Fixes
 
 - **Date format**: Changed from MM/DD/YY to DD/MM/YY in all graphs and tables
 - **History graph**: Now correctly shows more than 7 days of data
+- **No in-app self-updater**: updates come from the Docker image; the `api/update/check|download|extract|move` endpoints return 404
 - **Runtime**: PHP 8.3 (official `php:8.3-fpm-alpine` image, PHP >= 8.3.36) + nginx instead of the
   PHP 7.4 image the upstream project ships. The build fails if the PHP version is older than 8.3.36.
 
@@ -95,3 +96,7 @@ docker load -i speedtest-fixed-backup.tar
 # Restore data
 docker cp ./backup-config/. speedtest:/config
 ```
+
+## License
+
+GPL-3.0, like the upstream project [henrywhitaker3/speedtest-tracker](https://github.com/henrywhitaker3/speedtest-tracker). See [LICENSE](LICENSE).

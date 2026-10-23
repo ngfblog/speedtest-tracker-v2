@@ -31,8 +31,8 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'user' => 'henrywhitaker3',
-    'repo' => 'Speedtest-Tracker',
+    'user' => 'ngfblog',
+    'repo' => 'speedtest-tracker-v2',
     'branch' => 'master',
 
     /*

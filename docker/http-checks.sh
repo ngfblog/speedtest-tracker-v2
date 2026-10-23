@@ -1,6 +1,7 @@
 # Shared HTTP checks for smoke-test.sh and upgrade-test.sh (sourced, not executed).
 # check_http BASE_URL: fetches "/", then requires HTTP 200 and a non-empty body for
-# every <script src> and <link href> path in the page and for the main API endpoints.
+# every <script src> and <link href> path in the page and for the main API endpoints,
+# and HTTP 404 for the disabled self-updater endpoints.
 # Needs at least one speedtest row (/api/speedtest/latest is 404 on an empty table).
 # Returns non-zero if any check fails.
 
@@ -23,6 +24,16 @@ check_http() {
             echo "ok   $code ${size%.*} bytes  $path"
         else
             echo "FAIL $code ${size%.*} bytes  $path"
+            fail=1
+        fi
+    done
+    # The in-app self-updater is disabled
+    for path in /api/update/check /api/update/download /api/update/extract /api/update/move; do
+        code="$(curl -s -o /dev/null -w '%{http_code}' "$base$path" || echo 000)"
+        if [ "$code" = 404 ]; then
+            echo "ok   $code (updater disabled)  $path"
+        else
+            echo "FAIL $code (expected 404)  $path"
             fail=1
         fi
     done

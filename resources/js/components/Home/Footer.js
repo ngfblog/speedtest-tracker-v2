@@ -11,7 +11,7 @@ export default class Footer extends Component {
                 <Row>
                     <Col sm={{ span: 12 }} className="text-center">
                         <Version />
-                        <p className="text-muted">See the code on <a href="https://github.com/henrywhitaker3/Speedtest-Tracker" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+                        <p className="text-muted">See the code on <a href="https://github.com/ngfblog/speedtest-tracker-v2" target="_blank" rel="noopener noreferrer">GitHub</a></p>
                     </Col>
                 </Row>
             </Container>
