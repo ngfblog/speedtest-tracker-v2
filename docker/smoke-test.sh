@@ -63,6 +63,6 @@ if ! grep -q 'Yes' <<< "$status" || grep -qE '\|\s*No\s*\|' <<< "$status"; then
     echo "FAIL: migrations did not all run"
     exit 1
 fi
-docker logs "$name" 2>&1 | grep -q 'Downloading Speedtest CLI' || { echo "FAIL: Ookla CLI was not downloaded on start"; exit 1; }
+grep -q 'Downloading Speedtest CLI' <<< "$(docker logs "$name" 2>&1)" || { echo "FAIL: Ookla CLI was not downloaded on start"; exit 1; }
 docker exec "$name" test -x /config/www/app/Bin/speedtest || { echo "FAIL: /config/www/app/Bin/speedtest missing"; exit 1; }
 echo "SMOKE TEST PASSED: no Ookla CLI in the image; empty /config -> CLI downloaded, speed.db created, all migrations ran, HTTP 200 on port 80"
