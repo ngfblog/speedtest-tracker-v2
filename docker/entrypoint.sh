@@ -2,7 +2,7 @@
 # Entrypoint for speedtest-tracker on PHP 8.3.
 # Replaces the old LinuxServer s6 init script (/etc/cont-init.d/50-speedtest).
 # Differences from the old script: no "apk add composer" / "composer install"
-# on start (vendor/ and the Ookla CLI are part of the image), and the cron
+# on start (vendor/ is part of the image), and the cron
 # daemon is replaced by a one-minute scheduler loop.
 
 set -u
@@ -66,7 +66,25 @@ sed -i "s,DB_DATABASE=.*,DB_DATABASE=/config/speed.db," /config/www/.env
 mkdir -p /config/log/speedtest /config/www/storage/clockwork
 chown -R abc:"$grp" /config
 
-# --- Ookla CLI (built into /site/app/Bin, copied above by cp -rfT) ---
+# --- Ookla CLI ---
+# Not shipped in the image (redistribution). Downloaded on first start, like the old
+# init script, into the volume; cp -rfT above keeps it because /site has no binary.
+# "arch" can be set like in the old image (ENV arch=x86_64); it defaults to uname -m.
+if [ "${OOKLA_EULA_GDPR:-}" = "true" ] && [ ! -f /config/www/app/Bin/speedtest ]; then
+    echo "Ookla GDPR and EULA accepted. Downloading Speedtest CLI."
+    arch="${arch:-$(uname -m)}"
+    tmp=$(mktemp -d)
+    if wget -qO "$tmp/speedtest.tgz" "https://install.speedtest.net/app/cli/ookla-speedtest-1.0.0-${arch}-linux.tgz" \
+        && tar -xzf "$tmp/speedtest.tgz" -C "$tmp" speedtest; then
+        mkdir -p /config/www/app/Bin
+        mv "$tmp/speedtest" /config/www/app/Bin/speedtest
+        chown abc:"$grp" /config/www/app/Bin/speedtest
+    else
+        echo "WARNING: could not download the Speedtest CLI, it will be retried on the next start"
+    fi
+    rm -rf "$tmp"
+fi
+
 if [ -f /config/www/app/Bin/speedtest ]; then
     chmod +x /config/www/app/Bin/speedtest
     # Accept the license for HOME=/config (as the old image did) and for HOME=/config/www,

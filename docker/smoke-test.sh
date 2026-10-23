@@ -1,6 +1,7 @@
 #!/bin/bash
 # Smoke test: start the image with an EMPTY /config volume and check that it
-# creates speed.db, runs all migrations and answers HTTP 200 on port 80.
+# creates speed.db, runs all migrations and answers HTTP 200 on port 80, and that
+# the Ookla CLI is not in the image but is downloaded into /config on first start.
 # Usage: docker/smoke-test.sh IMAGE [HOST_PORT]
 
 set -euo pipefail
@@ -12,6 +13,19 @@ config="$(mktemp -d)"
 
 docker rm -f "$name" > /dev/null 2>&1 || true
 trap 'docker rm -f "$name" > /dev/null 2>&1 || true' EXIT
+
+echo "== Ookla CLI must not be in the image"
+set -x
+docker run --rm --entrypoint sh "$image" -c 'ls -la /site/app/Bin'
+{ set +x; } 2> /dev/null
+if docker run --rm --entrypoint sh "$image" -c 'test -e /site/app/Bin/speedtest'; then
+    echo "FAIL: /site/app/Bin/speedtest is in the image"
+    exit 1
+fi
+if docker history --no-trunc --format '{{.CreatedBy}}' "$image" | grep -i 'install.speedtest.net'; then
+    echo "FAIL: a build step downloads the Ookla CLI"
+    exit 1
+fi
 
 echo "== /config before start (must be empty)"
 set -x
@@ -49,4 +63,6 @@ if ! grep -q 'Yes' <<< "$status" || grep -qE '\|\s*No\s*\|' <<< "$status"; then
     echo "FAIL: migrations did not all run"
     exit 1
 fi
-echo "SMOKE TEST PASSED: empty /config -> speed.db created, all migrations ran, HTTP 200 on port 80"
+docker logs "$name" 2>&1 | grep -q 'Downloading Speedtest CLI' || { echo "FAIL: Ookla CLI was not downloaded on start"; exit 1; }
+docker exec "$name" test -x /config/www/app/Bin/speedtest || { echo "FAIL: /config/www/app/Bin/speedtest missing"; exit 1; }
+echo "SMOKE TEST PASSED: no Ookla CLI in the image; empty /config -> CLI downloaded, speed.db created, all migrations ran, HTTP 200 on port 80"
