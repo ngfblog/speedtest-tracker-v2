@@ -4,6 +4,12 @@ import Axios from 'axios';
 import { Spinner, Container, Row, Col, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
+// One decimal, or "-" when the value is missing (e.g. no successful tests yet)
+const format = (stats, key) => {
+    const value = stats ? parseFloat(stats[key]) : NaN;
+    return Number.isFinite(value) ? value.toFixed(1) : '-';
+};
+
 export default class LatestResults extends Component {
     constructor(props) {
         super(props);
@@ -59,11 +65,11 @@ export default class LatestResults extends Component {
                                         <h5 className="stat-title">Ping</h5>
                                     </div>
                                     <div className="stat-body">
-                                        <h1 className="stat-value">{data.data.ping}</h1>
+                                        <h1 className="stat-value">{format(data.data, 'ping')}</h1>
                                         <p className="stat-unit">ms (current)</p>
-                                        <p className="stat-subtext">NaN ms (average)</p>
-                                        <p className="stat-subtext">NaN ms (maximum)</p>
-                                        <p className="stat-subtext">NaN ms (minimum)</p>
+                                        <p className="stat-subtext">{format(data.average, 'ping')} ms (average)</p>
+                                        <p className="stat-subtext">{format(data.maximum, 'ping')} ms (maximum)</p>
+                                        <p className="stat-subtext">{format(data.minimum, 'ping')} ms (minimum)</p>
                                     </div>
                                 </div>
                             </Col>
@@ -74,11 +80,11 @@ export default class LatestResults extends Component {
                                         <h5 className="stat-title">Download</h5>
                                     </div>
                                     <div className="stat-body">
-                                        <h1 className="stat-value">{data.data.download}</h1>
+                                        <h1 className="stat-value">{format(data.data, 'download')}</h1>
                                         <p className="stat-unit">Mbit/s (current)</p>
-                                        <p className="stat-subtext">NaN Mbit/s (average)</p>
-                                        <p className="stat-subtext">NaN Mbit/s (maximum)</p>
-                                        <p className="stat-subtext">NaN Mbit/s (minimum)</p>
+                                        <p className="stat-subtext">{format(data.average, 'download')} Mbit/s (average)</p>
+                                        <p className="stat-subtext">{format(data.maximum, 'download')} Mbit/s (maximum)</p>
+                                        <p className="stat-subtext">{format(data.minimum, 'download')} Mbit/s (minimum)</p>
                                     </div>
                                 </div>
                             </Col>
@@ -89,11 +95,11 @@ export default class LatestResults extends Component {
                                         <h5 className="stat-title">Upload</h5>
                                     </div>
                                     <div className="stat-body">
-                                        <h1 className="stat-value">{data.data.upload}</h1>
+                                        <h1 className="stat-value">{format(data.data, 'upload')}</h1>
                                         <p className="stat-unit">Mbit/s (current)</p>
-                                        <p className="stat-subtext">NaN Mbit/s (average)</p>
-                                        <p className="stat-subtext">NaN Mbit/s (maximum)</p>
-                                        <p className="stat-subtext">NaN Mbit/s (minimum)</p>
+                                        <p className="stat-subtext">{format(data.average, 'upload')} Mbit/s (average)</p>
+                                        <p className="stat-subtext">{format(data.maximum, 'upload')} Mbit/s (maximum)</p>
+                                        <p className="stat-subtext">{format(data.minimum, 'upload')} Mbit/s (minimum)</p>
                                     </div>
                                 </div>
                             </Col>
