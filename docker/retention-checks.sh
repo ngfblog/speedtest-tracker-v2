@@ -8,7 +8,7 @@
 # Returns non-zero if any check fails.
 
 check_retention() {
-    local name="$1" fail=0 tmp=/tmp/retention-test.db out real_before real_after
+    local name="$1" fail=0 dir tmp out real_before real_after
     # Runs SQL against a SQLite file inside the container; prints one value
     _sql() {
         docker exec "$name" php -r '$db = new PDO("sqlite:" . $argv[1]); echo $db->query($argv[2])->fetchColumn(), PHP_EOL;' "$1" "$2"
@@ -19,9 +19,13 @@ check_retention() {
     }
 
     real_before="$(_sql /config/speed.db 'SELECT COUNT(*) FROM speedtests')"
+    # A private directory owned by abc: in sticky /tmp, fs.protected_regular stops even
+    # root from opening a file another user owns for writing (SQLite then says "readonly")
+    dir="$(docker exec "$name" su-exec abc mktemp -d)"
+    tmp="$dir/retention-test.db"
     docker exec "$name" su-exec abc cp /config/speed.db "$tmp"
     # Old rows are tagged "old-*", rows to keep "keep-*"; 1 day of margin around the cutoff
-    docker exec -i "$name" php -- "$tmp" <<'PHP'
+    docker exec -i "$name" su-exec abc php -- "$tmp" <<'PHP' || { echo "FAIL: could not seed $tmp"; docker exec "$name" rm -rf "$dir"; return 1; }
 <?php
 $db = new PDO('sqlite:' . $argv[1]);
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -65,7 +69,7 @@ PHP
 
     real_after="$(_sql /config/speed.db 'SELECT COUNT(*) FROM speedtests')"
     [ "$real_after" = "$real_before" ] || { echo "FAIL: /config/speed.db changed ($real_before -> $real_after rows)"; fail=1; }
-    docker exec "$name" rm -f "$tmp"
+    docker exec "$name" rm -rf "$dir"
 
     echo "-- speedtest:prune is scheduled daily at 03:30"
     out="$(docker exec "$name" su-exec abc php /config/www/artisan schedule:list 2>&1)" || true
