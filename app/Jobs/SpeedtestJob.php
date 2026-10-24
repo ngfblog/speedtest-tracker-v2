@@ -10,7 +10,7 @@ use App\Interfaces\SpeedtestProvider;
 use App\Utils\OoklaTester;
 use Exception;
 use Healthcheck;
-use Henrywhitaker3\Healthchecks\Healthchecks;
+use NgfBlog\Healthchecks\Healthchecks;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

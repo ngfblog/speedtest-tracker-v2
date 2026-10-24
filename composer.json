@@ -7,6 +7,22 @@
         "laravel"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/laravel-actions",
+            "options": {
+                "symlink": false
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/healthchecks-io",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
     "require": {
         "php": "^7.2.5",
         "doctrine/dbal": "^2.10",
@@ -14,8 +30,6 @@
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "henrywhitaker3/healthchecks-io": "^1.0",
-        "henrywhitaker3/laravel-actions": "^1.0",
         "influxdata/influxdb-client-php": "^1.12",
         "influxdb/influxdb-php": "^1.15",
         "laravel-notification-channels/telegram": "^0.5.0",
@@ -23,6 +37,8 @@
         "laravel/slack-notification-channel": "^2.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
+        "ngfblog/healthchecks-io": "^1.0",
+        "ngfblog/laravel-actions": "^1.0",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {

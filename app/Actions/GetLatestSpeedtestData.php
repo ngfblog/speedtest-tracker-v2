@@ -6,7 +6,7 @@ use App\Helpers\SettingsHelper;
 use App\Helpers\SpeedtestHelper;
 use App\Models\Speedtest;
 use DB;
-use Henrywhitaker3\LaravelActions\Interfaces\ActionInterface;
+use NgfBlog\LaravelActions\Interfaces\ActionInterface;
 
 class GetLatestSpeedtestData implements ActionInterface
 {

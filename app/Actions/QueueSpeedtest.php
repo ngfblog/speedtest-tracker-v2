@@ -5,7 +5,7 @@ namespace App\Actions;
 use App\Helpers\SettingsHelper;
 use App\Interfaces\SpeedtestProvider;
 use App\Jobs\SpeedtestJob;
-use Henrywhitaker3\LaravelActions\Interfaces\ActionInterface;
+use NgfBlog\LaravelActions\Interfaces\ActionInterface;
 
 class QueueSpeedtest implements ActionInterface
 {
