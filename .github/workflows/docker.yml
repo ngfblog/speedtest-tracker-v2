@@ -18,6 +18,8 @@ concurrency:
 
 env:
   IMAGE: nirgf/speedtest-tracker-v2
+  # The old PHP 7.4 image (formerly ":latest", pushed 2026-02-12)
+  OLD_IMAGE: nirgf/speedtest-tracker-v2@sha256:d729653c2554ebced85a9747e23e479a0bd2289c8e6cb7f728299e99d89ab371
 
 jobs:
   build:
@@ -27,9 +29,23 @@ jobs:
 
       - uses: docker/setup-buildx-action@v3
 
+      # php83 and php83-YYYYMMDD on every push; "latest" too, but only from master
+      # (push, weekly schedule or workflow_dispatch), never from other branches or PRs
       - name: Image tags
         id: tags
-        run: echo "date=$(date -u +%Y%m%d)" >> "$GITHUB_OUTPUT"
+        env:
+          LATEST: ${{ github.ref == 'refs/heads/master' && contains(fromJSON('["push", "schedule", "workflow_dispatch"]'), github.event_name) }}
+        run: |
+          date="$(date -u +%Y%m%d)"
+          {
+            echo "date=$date"
+            echo "list<<EOF"
+            echo "$IMAGE:php83"
+            echo "$IMAGE:php83-$date"
+            if [ "$LATEST" = true ]; then echo "$IMAGE:latest"; fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "latest=$LATEST"
 
       - name: Build image
         uses: docker/build-push-action@v6
@@ -50,9 +66,10 @@ jobs:
       - name: Smoke test with an empty /config volume
         run: docker/smoke-test.sh speedtest-tracker:ci 8080
 
-      # A /config volume initialised by the old public image must keep working
+      # A /config volume initialised by the old public PHP 7.4 image must keep working.
+      # Pinned by digest: "latest" was that image until this workflow started pushing it.
       - name: Upgrade test from the old image
-        run: docker/upgrade-test.sh nirgf/speedtest-tracker-v2:latest speedtest-tracker:ci 8081
+        run: docker/upgrade-test.sh ${{ env.OLD_IMAGE }} speedtest-tracker:ci 8081
 
       - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'
@@ -69,7 +86,5 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: |
-            ${{ env.IMAGE }}:php83
-            ${{ env.IMAGE }}:php83-${{ steps.tags.outputs.date }}
+          tags: ${{ steps.tags.outputs.list }}
           cache-from: type=gha
