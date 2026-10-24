@@ -6,6 +6,8 @@ A maintained fork of the original Speedtest Tracker (GPL-3.0, see [NOTICE.md](NO
 
 - **Date format**: Changed from MM/DD/YY to DD/MM/YY in all graphs and tables
 - **History graph**: Now correctly shows more than 7 days of data
+- **History range**: pick 1, 7, 14, 30, 60, 90, 180 or 365 days from a list (default 30); the API accepts only 1..365 days
+- **Retention**: speedtests older than `HISTORY_DAYS` (default 365) are pruned daily
 - **No in-app self-updater**: updates come from the Docker image; the `api/update/check|download|extract|move` endpoints return 404
 - **Runtime**: PHP 8.3 (official `php:8.3-fpm-alpine` image, PHP >= 8.3.36) + nginx instead of the
   PHP 7.4 image the upstream project ships. The build fails if the PHP version is older than 8.3.36.
@@ -65,6 +67,7 @@ docker run -d \
 | `OOKLA_EULA_GDPR=true` | **Required.** Accepts the Ookla EULA and GDPR terms; the container exits without it |
 | `PUID` / `PGID` | User and group IDs that own `/config` and run the app (default `99` / `100`) |
 | `TZ` | Time zone, e.g. `Asia/Jerusalem` (default `UTC`) |
+| `HISTORY_DAYS` | Keep this many days of speedtests (default `365`, minimum `30`); older rows are deleted daily at 03:30 (`TZ`) by `artisan speedtest:prune` |
 | `AUTH=true` | Enable authentication |
 | `SLACK_WEBHOOK` | Slack webhook URL for notifications |
 | `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` | Telegram notifications |

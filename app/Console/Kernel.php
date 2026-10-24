@@ -42,6 +42,7 @@ class Kernel extends ConsoleKernel
         }
         $schedule->command('speedtest:overview')->cron('0 ' . SettingsHelper::get('speedtest_overview_time')->value . ' * * *')->timezone(env('TZ', 'UTC'));
         $schedule->command('speedtest:clear-sessions')->everyMinute();
+        $schedule->command('speedtest:prune')->dailyAt('03:30')->timezone(env('TZ', 'UTC'));
     }
 
     /**

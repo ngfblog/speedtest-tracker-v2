@@ -12,7 +12,7 @@ class HomepageDataController extends Controller
     {
         $validator = Validator::make(
             ['days' => $days],
-            ['days' => ['required', 'numeric']],
+            ['days' => ['required', 'integer', 'min:1', 'max:365']],
         );
         if ($validator->fails()) {
             return response()->json([
