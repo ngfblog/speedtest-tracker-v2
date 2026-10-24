@@ -1,5 +1,10 @@
 /node_modules
 /public/hot
+# Built by "npm run production" (the Dockerfile's assets stage builds them)
+/public/js/app.js
+/public/js/app.js.LICENSE.txt
+/public/css/app.css
+/public/mix-manifest.json
 /public/storage
 /storage/*.key
 /vendor
