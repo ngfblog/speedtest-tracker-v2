@@ -1,8 +1,8 @@
 <?php
 
-namespace Henrywhitaker3\LaravelActions\Tests\Utils;
+namespace NgfBlog\LaravelActions\Tests\Utils;
 
-use Henrywhitaker3\LaravelActions\Interfaces\ActionInterface;
+use NgfBlog\LaravelActions\Interfaces\ActionInterface;
 
 class ExampleNonInstantiatedAction implements ActionInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-use Henrywhitaker3\LaravelActions\Interfaces\ActionInterface;
+use NgfBlog\LaravelActions\Interfaces\ActionInterface;
 
 if (! function_exists('run')) {
     /**

@@ -1,12 +1,12 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksFailureException;
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksUnauthorisedException;
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
-use Henrywhitaker3\Healthchecks\Healthchecks;
-use Henrywhitaker3\Healthchecks\HealthchecksManager;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksFailureException;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksUnauthorisedException;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
+use NgfBlog\Healthchecks\Healthchecks;
+use NgfBlog\Healthchecks\HealthchecksManager;
 use InvalidArgumentException;
 use Ramsey\Uuid\Exception\InvalidUuidStringException;
 use Ramsey\Uuid\Uuid;
@@ -142,7 +142,7 @@ class UpdateCheckTest extends Test
     public function testUpdate404()
     {
         try {
-            $hm = new HealthchecksManager('abc', 'https://github.com/henrywhitaker3/404');
+            $hm = new HealthchecksManager('abc', 'https://github.com/ngfblog/404');
             $new = $hm->updateCheck(Uuid::uuid4(), []);
         } catch(HealthchecksUuidNotFoundException $e) {
             $this->assertTrue(true);

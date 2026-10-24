@@ -1,15 +1,15 @@
 {
-    "name": "henrywhitaker3/laravel-actions",
+    "name": "ngfblog/laravel-actions",
+    "version": "1.0.5",
     "description": "Simple actions package for Laravel",
     "license": "MIT",
     "authors": [
         {
             "name": "Henry Whitaker",
-            "email": "henrywhitaker3@outlook.com",
-            "homepage": "https://github.com/henrywhitaker3"
+            "role": "Original author"
         }
     ],
-    "homepage": "https://github.com/henrywhitaker3/laravel-actions",
+    "homepage": "https://github.com/ngfblog/speedtest-tracker-v2/tree/master/packages/laravel-actions",
     "keywords": ["Laravel", "LaravelActions"],
     "require": {
         "illuminate/support": "~7|~8"
@@ -20,18 +20,18 @@
     },
     "autoload": {
         "psr-4": {
-            "Henrywhitaker3\\LaravelActions\\": "src/"
+            "NgfBlog\\LaravelActions\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Henrywhitaker3\\LaravelActions\\Tests\\": "tests"
+            "NgfBlog\\LaravelActions\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Henrywhitaker3\\LaravelActions\\LaravelActionsServiceProvider"
+                "NgfBlog\\LaravelActions\\LaravelActionsServiceProvider"
             ]
         }
     }

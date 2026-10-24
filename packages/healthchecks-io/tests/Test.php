@@ -1,6 +1,6 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;

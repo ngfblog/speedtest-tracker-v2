@@ -1,6 +1,6 @@
 <?php
 
-namespace Henrywhitaker3\LaravelActions\Commands;
+namespace NgfBlog\LaravelActions\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputArgument;

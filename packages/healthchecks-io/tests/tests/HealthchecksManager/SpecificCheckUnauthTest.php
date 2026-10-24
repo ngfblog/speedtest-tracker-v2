@@ -1,10 +1,10 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksUnauthorisedException;
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
-use Henrywhitaker3\Healthchecks\HealthchecksManager;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksUnauthorisedException;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
+use NgfBlog\Healthchecks\HealthchecksManager;
 use Ramsey\Uuid\Uuid;
 
 class SpecificCheckUnauthTest extends Test

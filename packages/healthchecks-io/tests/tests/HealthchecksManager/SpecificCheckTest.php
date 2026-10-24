@@ -1,9 +1,9 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
-use Henrywhitaker3\Healthchecks\HealthchecksManager;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
+use NgfBlog\Healthchecks\HealthchecksManager;
 use Ramsey\Uuid\Exception\InvalidUuidStringException;
 use Ramsey\Uuid\Uuid;
 

@@ -7,7 +7,7 @@ use App\Models\Speedtest;
 use App\Utils\OoklaTester;
 use Carbon\Carbon;
 use Exception;
-use Henrywhitaker3\Healthchecks\Healthchecks;
+use NgfBlog\Healthchecks\Healthchecks;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;

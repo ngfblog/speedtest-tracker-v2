@@ -1,10 +1,10 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
-use Henrywhitaker3\Healthchecks\Exceptions\InvalidUrlException;
-use Henrywhitaker3\Healthchecks\Healthchecks;
-use Henrywhitaker3\Healthchecks\HealthchecksManager;
+use NgfBlog\Healthchecks\Exceptions\InvalidUrlException;
+use NgfBlog\Healthchecks\Healthchecks;
+use NgfBlog\Healthchecks\HealthchecksManager;
 
 class InstantiationTest extends Test
 {

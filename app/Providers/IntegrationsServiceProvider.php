@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Helpers\SettingsHelper;
 use Exception;
 use File;
-use Henrywhitaker3\Healthchecks\Healthchecks;
+use NgfBlog\Healthchecks\Healthchecks;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;

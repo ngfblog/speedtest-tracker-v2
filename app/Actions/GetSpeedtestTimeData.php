@@ -6,7 +6,7 @@ use App\Helpers\SettingsHelper;
 use App\Models\Speedtest;
 use Cache;
 use Carbon\Carbon;
-use Henrywhitaker3\LaravelActions\Interfaces\ActionInterface;
+use NgfBlog\LaravelActions\Interfaces\ActionInterface;
 
 class GetSpeedtestTimeData implements ActionInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Henrywhitaker3\LaravelActions;
+namespace NgfBlog\LaravelActions;
 
-use Henrywhitaker3\LaravelActions\Commands\MakeActionCommand;
+use NgfBlog\LaravelActions\Commands\MakeActionCommand;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelActionsServiceProvider extends ServiceProvider

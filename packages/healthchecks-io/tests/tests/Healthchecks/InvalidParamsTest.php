@@ -1,10 +1,10 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
-use Henrywhitaker3\Healthchecks\Exceptions\InvalidUrlException;
-use Henrywhitaker3\Healthchecks\Healthchecks;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
+use NgfBlog\Healthchecks\Exceptions\InvalidUrlException;
+use NgfBlog\Healthchecks\Healthchecks;
 use Ramsey\Uuid\Exception\InvalidUuidStringException;
 use Ramsey\Uuid\Uuid;
 
@@ -54,7 +54,7 @@ class InvalidUuidTest extends Test
     {
         try {
             $uuid = Uuid::uuid4();
-            $hc = new Healthchecks($uuid, 'https://github.com/henrywhitaker3/404');
+            $hc = new Healthchecks($uuid, 'https://github.com/ngfblog/404');
             $hc->success();
         } catch(HealthchecksUuidNotFoundException $e) {
             $this->assertTrue(true);
@@ -73,7 +73,7 @@ class InvalidUuidTest extends Test
     {
         try {
             $uuid = Uuid::uuid4();
-            $hc = new Healthchecks($uuid, 'https://github.com/henrywhitaker3/404');
+            $hc = new Healthchecks($uuid, 'https://github.com/ngfblog/404');
             $hc->fail();
         } catch(HealthchecksUuidNotFoundException $e) {
             $this->assertTrue(true);
@@ -92,7 +92,7 @@ class InvalidUuidTest extends Test
     {
         try {
             $uuid = Uuid::uuid4();
-            $hc = new Healthchecks($uuid, 'https://github.com/henrywhitaker3/404');
+            $hc = new Healthchecks($uuid, 'https://github.com/ngfblog/404');
             $hc->start();
         } catch(HealthchecksUuidNotFoundException $e) {
             $this->assertTrue(true);

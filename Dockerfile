@@ -13,6 +13,8 @@ RUN NODE_OPTIONS=--openssl-legacy-provider npm run production
 FROM composer:2 AS vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
+# Local path repositories (ngfblog/laravel-actions, ngfblog/healthchecks-io)
+COPY packages ./packages
 RUN composer config platform-check false \
  && composer install --no-dev --no-scripts --no-autoloader --ignore-platform-reqs --prefer-dist --no-interaction
 COPY . .

@@ -1,13 +1,11 @@
 # PHP healthchecks.io
 
-![version](https://img.shields.io/github/v/tag/henrywhitaker3/PHP-healthchecks.io?color=light-green&label=version&style=flat-square) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/henrywhitaker3/PHP-healthchecks.io/PHPUnit?label=build&logo=github&style=flat-square)](https://github.com/henrywhitaker3/PHP-healthchecks.io/actions) [![last_commit](https://img.shields.io/github/last-commit/henrywhitaker3/PHP-healthchecks.io?style=flat-square)](https://github.com/henrywhitaker3/PHP-healthchecks.io/commits) [![issues](https://img.shields.io/github/issues/henrywhitaker3/PHP-healthchecks.io?style=flat-square)](https://github.com/henrywhitaker3/PHP-healthchecks.io/issues) [![commit_freq](https://img.shields.io/github/commit-activity/m/henrywhitaker3/PHP-healthchecks.io?style=flat-square)](https://github.com/henrywhitaker3/PHP-healthchecks.io/commits) [![license](https://img.shields.io/github/license/henrywhitaker3/PHP-healthchecks.io?style=flat-square)](https://github.com/henrywhitaker3/PHP-healthchecks.io/blob/master/LICENSE)
-
 This package provides simple methods to interact with the [healthchecks.io](https://healthchecks.io) API.
 
 ## Installation
 
 ```bash
-composer require henrywhitaker3/healthchecks-io
+composer require ngfblog/healthchecks-io
 ```
 
 ## Usage
@@ -62,7 +60,7 @@ Contributions are welcome, but please write tests for whatever you add. Create a
 ```php
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
 class NewTest extends Test
 {

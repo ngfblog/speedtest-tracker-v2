@@ -1,6 +1,6 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks;
+namespace NgfBlog\Healthchecks;
 
 class HttpClient
 {

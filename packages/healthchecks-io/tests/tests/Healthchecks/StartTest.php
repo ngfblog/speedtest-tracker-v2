@@ -1,8 +1,8 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
-use Henrywhitaker3\Healthchecks\Healthchecks;
+use NgfBlog\Healthchecks\Healthchecks;
 
 class StartTest extends Test
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Rules;
+namespace NgfBlog\Healthchecks\Rules;
 
 use Rakit\Validation\Rule;
 

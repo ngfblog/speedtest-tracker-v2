@@ -1,10 +1,10 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
 use Exception;
-use Henrywhitaker3\Healthchecks\Healthchecks;
-use Henrywhitaker3\Healthchecks\HealthchecksManager;
+use NgfBlog\Healthchecks\Healthchecks;
+use NgfBlog\Healthchecks\HealthchecksManager;
 use InvalidArgumentException;
 
 class CreateCheckTest extends Test

@@ -2,7 +2,7 @@
 
 namespace DummyNamespace;
 
-use Henrywhitaker3\LaravelActions\Interfaces\ActionInterface;
+use NgfBlog\LaravelActions\Interfaces\ActionInterface;
 
 class DummyClass implements ActionInterface
 {

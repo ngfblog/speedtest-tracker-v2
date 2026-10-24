@@ -1,10 +1,10 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Tests;
+namespace NgfBlog\Healthchecks\Tests;
 
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksFailureException;
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksUnauthorisedException;
-use Henrywhitaker3\Healthchecks\HealthchecksManager;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksFailureException;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksUnauthorisedException;
+use NgfBlog\Healthchecks\HealthchecksManager;
 
 class IntegrationsTest extends Test
 {
@@ -82,7 +82,7 @@ class IntegrationsTest extends Test
     public function testGetIntegrations404()
     {
         try {
-            $hm = new HealthchecksManager('abc', 'https://github.com/henrywhitaker3/404');
+            $hm = new HealthchecksManager('abc', 'https://github.com/ngfblog/404');
             $hm->integrations();
         } catch(HealthchecksFailureException $e) {
             $this->assertTrue(true);

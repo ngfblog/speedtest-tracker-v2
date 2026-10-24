@@ -6,7 +6,7 @@ use App\Models\Speedtest;
 use Cache;
 use Carbon\Carbon;
 use DB;
-use Henrywhitaker3\LaravelActions\Interfaces\ActionInterface;
+use NgfBlog\LaravelActions\Interfaces\ActionInterface;
 
 class GetFailedSpeedtestData implements ActionInterface
 {

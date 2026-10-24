@@ -1,15 +1,15 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks;
+namespace NgfBlog\Healthchecks;
 
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksAccountLimitReachedException;
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksFailureException;
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksForbiddenException;
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksUnauthorisedException;
-use Henrywhitaker3\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
-use Henrywhitaker3\Healthchecks\Exceptions\InvalidUrlException;
-use Henrywhitaker3\Healthchecks\Rules\IntValidationRule;
-use Henrywhitaker3\Healthchecks\Rules\StringValidationRule;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksAccountLimitReachedException;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksFailureException;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksForbiddenException;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksUnauthorisedException;
+use NgfBlog\Healthchecks\Exceptions\HealthchecksUuidNotFoundException;
+use NgfBlog\Healthchecks\Exceptions\InvalidUrlException;
+use NgfBlog\Healthchecks\Rules\IntValidationRule;
+use NgfBlog\Healthchecks\Rules\StringValidationRule;
 use InvalidArgumentException;
 use Rakit\Validation\Validator;
 use Ramsey\Uuid\Exception\InvalidUuidStringException;

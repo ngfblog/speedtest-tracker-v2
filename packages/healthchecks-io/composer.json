@@ -1,10 +1,11 @@
 {
-    "name": "henrywhitaker3/healthchecks-io",
+    "name": "ngfblog/healthchecks-io",
+    "version": "1.0.2",
     "description": "A simple PHP healthchecks.io wrapper",
     "keywords": [
     	"healthchecks", "healthchecks.io", "wrapper", "api"
     ],
-    "homepage": "https://github.com/henrywhitaker3/PHP-healthchecks.io",
+    "homepage": "https://github.com/ngfblog/speedtest-tracker-v2/tree/master/packages/healthchecks-io",
     "type": "library",
     "require": {
         "php": ">=7.2.5",
@@ -20,18 +21,17 @@
     "authors": [
         {
             "name": "Henry Whitaker",
-            "email": "henrywhitaker3@outlook.com",
-            "homepage": "https://github.com/henrywhitaker3"
+            "role": "Original author"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Henrywhitaker3\\Healthchecks\\": "src/"
+            "NgfBlog\\Healthchecks\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Henrywhitaker3\\Healthchecks\\Tests\\": "tests/"
+            "NgfBlog\\Healthchecks\\Tests\\": "tests/"
         }
     }
 }

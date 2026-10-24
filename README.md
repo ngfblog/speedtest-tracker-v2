@@ -1,6 +1,6 @@
 # Speedtest Tracker - Fixed Version
 
-Based on [henrywhitaker3/speedtest-tracker](https://github.com/henrywhitaker3/speedtest-tracker) (GPL-3.0) with the following fixes:
+A maintained fork of the original Speedtest Tracker (GPL-3.0, see [NOTICE.md](NOTICE.md)) with the following fixes:
 
 ## Fixes
 
@@ -99,4 +99,5 @@ docker cp ./backup-config/. speedtest:/config
 
 ## License
 
-GPL-3.0, like the upstream project [henrywhitaker3/speedtest-tracker](https://github.com/henrywhitaker3/speedtest-tracker). See [LICENSE](LICENSE).
+GPL-3.0, like the upstream project. See [LICENSE](LICENSE). Credits for the upstream project and the bundled
+MIT packages in `packages/` are in [NOTICE.md](NOTICE.md).

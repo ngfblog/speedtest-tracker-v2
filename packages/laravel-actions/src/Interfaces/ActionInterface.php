@@ -1,6 +1,6 @@
 <?php
 
-namespace Henrywhitaker3\LaravelActions\Interfaces;
+namespace NgfBlog\LaravelActions\Interfaces;
 
 interface ActionInterface
 {

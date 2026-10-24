@@ -2,15 +2,15 @@
 # Fails if the image config, build history or filesystem references the old
 # images nirgf/speedtest-tracker-v2 or henrywhitaker3/speedtest-tracker.
 # The upstream GitHub links (github.com/henrywhitaker3/Speedtest-Tracker/pull/...)
-# in the app's changelog are history, not an image reference; they are listed
-# but allowed in exactly that file.
+# in the app's changelog and the credit in NOTICE.md are history, not an image
+# reference; they are listed but allowed in exactly those files.
 # Usage: docker/check-references.sh IMAGE
 
 set -euo pipefail
 
 image="${1:?usage: check-references.sh IMAGE}"
 pattern='nirgf/speedtest-tracker-v2|henrywhitaker3/speedtest-tracker'
-allowed='^(site/changelog\.json)$'
+allowed='^(site/changelog\.json|site/NOTICE\.md)$'
 fail=0
 
 echo "== image config (labels, env, entrypoint)"

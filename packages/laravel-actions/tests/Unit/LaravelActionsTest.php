@@ -1,17 +1,17 @@
 <?php
 
-namespace Henrywhitaker3\LaravelActions\Tests\Unit;
+namespace NgfBlog\LaravelActions\Tests\Unit;
 
-use Henrywhitaker3\LaravelActions\Tests\Utils\ExampleInstantiatedAction;
-use Henrywhitaker3\LaravelActions\Tests\Utils\ExampleMultiArgumentAction;
-use Henrywhitaker3\LaravelActions\Tests\Utils\ExampleNoArgumentAction;
-use Henrywhitaker3\LaravelActions\Tests\Utils\ExampleNonInstantiatedAction;
+use NgfBlog\LaravelActions\Tests\Utils\ExampleInstantiatedAction;
+use NgfBlog\LaravelActions\Tests\Utils\ExampleMultiArgumentAction;
+use NgfBlog\LaravelActions\Tests\Utils\ExampleNoArgumentAction;
+use NgfBlog\LaravelActions\Tests\Utils\ExampleNonInstantiatedAction;
 
 class ActionTest extends \Orchestra\Testbench\TestCase
 {
     protected function getPackageProviders($app)
     {
-        return ['Henrywhitaker3\LaravelActions\LaravelActionsServiceProvider'];
+        return ['NgfBlog\LaravelActions\LaravelActionsServiceProvider'];
     }
 
     /**

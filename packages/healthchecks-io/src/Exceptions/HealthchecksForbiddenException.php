@@ -1,6 +1,6 @@
 <?php
 
-namespace Henrywhitaker3\Healthchecks\Exceptions;
+namespace NgfBlog\Healthchecks\Exceptions;
 
 use Exception;
 
