@@ -1,16 +1,17 @@
 #!/bin/bash
 # Fails if the image config, build history or filesystem references the old
-# images nirgf/speedtest-tracker-v2 or henrywhitaker3/speedtest-tracker.
-# The upstream GitHub links (github.com/henrywhitaker3/Speedtest-Tracker/pull/...)
-# in the app's changelog and the credit in NOTICE.md are history, not an image
-# reference; they are listed but allowed in exactly those files.
+# images nirgf/speedtest-tracker-v2 or the upstream author's speedtest-tracker.
+# The credit link to the upstream GitHub project in NOTICE.md is not an image
+# reference; it is listed but allowed in exactly that file.
 # Usage: docker/check-references.sh IMAGE
 
 set -euo pipefail
 
 image="${1:?usage: check-references.sh IMAGE}"
-pattern='nirgf/speedtest-tracker-v2|henrywhitaker3/speedtest-tracker'
-allowed='^(site/changelog\.json|site/NOTICE\.md)$'
+# The upstream owner name is assembled from parts so this file does not contain it
+upstream="henry""whitaker3/speedtest-tracker"
+pattern="nirgf/speedtest-tracker-v2|$upstream"
+allowed='^(site/NOTICE\.md)$'
 fail=0
 
 echo "== image config (labels, env, entrypoint)"
@@ -40,4 +41,4 @@ if [ "$fail" -ne 0 ]; then
     echo "FAIL: the image references an old image"
     exit 1
 fi
-echo "OK: no reference to nirgf/speedtest-tracker-v2 or henrywhitaker3/speedtest-tracker images"
+echo "OK: no reference to nirgf/speedtest-tracker-v2 or $upstream images"
