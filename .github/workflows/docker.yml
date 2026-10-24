@@ -3,7 +3,7 @@ name: Docker
 on:
   pull_request:
   push:
-    branches: [master, php83]
+    branches: [master]
   schedule:
     # Weekly rebuild to pick up PHP / Alpine security updates (Mondays 04:17 UTC)
     - cron: "17 4 * * 1"
@@ -27,9 +27,23 @@ jobs:
 
       - uses: docker/setup-buildx-action@v3
 
+      # php83 and php83-YYYYMMDD on every push; "latest" too, but only from master
+      # (push, weekly schedule or workflow_dispatch), never from other branches or PRs
       - name: Image tags
         id: tags
-        run: echo "date=$(date -u +%Y%m%d)" >> "$GITHUB_OUTPUT"
+        env:
+          LATEST: ${{ github.ref == 'refs/heads/master' && contains(fromJSON('["push", "schedule", "workflow_dispatch"]'), github.event_name) }}
+        run: |
+          date="$(date -u +%Y%m%d)"
+          {
+            echo "date=$date"
+            echo "list<<EOF"
+            echo "$IMAGE:php83"
+            echo "$IMAGE:php83-$date"
+            if [ "$LATEST" = true ]; then echo "$IMAGE:latest"; fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "latest=$LATEST"
 
       - name: Build image
         uses: docker/build-push-action@v6
@@ -50,9 +64,9 @@ jobs:
       - name: Smoke test with an empty /config volume
         run: docker/smoke-test.sh speedtest-tracker:ci 8080
 
-      # A /config volume initialised by the old public image must keep working
-      - name: Upgrade test from the old image
-        run: docker/upgrade-test.sh nirgf/speedtest-tracker-v2:latest speedtest-tracker:ci 8081
+      # A /config volume initialised by the last published build (php83) must keep working
+      - name: Upgrade test from the last published image
+        run: docker/upgrade-test.sh ${{ env.IMAGE }}:php83 speedtest-tracker:ci 8081
 
       - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'
@@ -69,7 +83,5 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: |
-            ${{ env.IMAGE }}:php83
-            ${{ env.IMAGE }}:php83-${{ steps.tags.outputs.date }}
+          tags: ${{ steps.tags.outputs.list }}
           cache-from: type=gha

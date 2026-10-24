@@ -17,10 +17,10 @@ A maintained fork of the original Speedtest Tracker (GPL-3.0, see [NOTICE.md](NO
 The image is built from this repository by GitHub Actions and pushed to Docker Hub as
 `nirgf/speedtest-tracker-v2` with the tags:
 
-- `php83` - latest build
-- `php83-YYYYMMDD` - build of that date (the image is rebuilt weekly for security updates)
+- `latest` = `php83` - the current PHP 8.3 build of `master`, rebuilt weekly for security updates
+- `php83-YYYYMMDD` - build of that date
 
-There is no `latest` tag.
+`latest` used to be the old PHP 7.4 image; it now points to the same image as `php83`.
 
 ## Quick Start
 
@@ -55,7 +55,7 @@ docker run -d \
   -v ./data:/config \
   -e OOKLA_EULA_GDPR=true \
   --restart unless-stopped \
-  nirgf/speedtest-tracker-v2:php83
+  nirgf/speedtest-tracker-v2:latest
 ```
 
 ## Configuration
