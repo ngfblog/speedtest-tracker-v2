@@ -53,7 +53,7 @@ class SpeedtestController extends Controller
     public function time($days)
     {
         $rule = [
-            'days' => ['required', 'integer'],
+            'days' => ['required', 'integer', 'min:1', 'max:365'],
         ];
 
         $validator = Validator::make(['days' => $days], $rule);
@@ -83,7 +83,7 @@ class SpeedtestController extends Controller
     public function fail($days)
     {
         $rule = [
-            'days' => ['required', 'integer'],
+            'days' => ['required', 'integer', 'min:1', 'max:365'],
         ];
 
         $validator = Validator::make(['days' => $days], $rule);

@@ -62,4 +62,15 @@ return [
     'exclude_files' => [
         'database/speed.db',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | History retention
+    |--------------------------------------------------------------------------
+    |
+    | speedtest:prune deletes speedtests older than this many days.
+    | Values below 30 are refused.
+    */
+
+    'history_days' => env('HISTORY_DAYS', 365),
 ];

@@ -19,7 +19,7 @@ export default class HomePage extends Component {
             time: null,
             fail: null,
             config: null,
-            days: 7,
+            days: 30,
             interval: null,
         }
     }
@@ -37,8 +37,8 @@ export default class HomePage extends Component {
     }
 
     updateDays = (days) => {
-        this.setState({ days: days });
-        this.getData();
+        // Fetch after the state update so the request uses the new value
+        this.setState({ days: days }, this.getData);
     }
 
 

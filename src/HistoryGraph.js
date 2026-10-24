@@ -24,6 +24,9 @@ function formatDateShort(date) {
     return day + '/' + month + '/' + year;
 }
 
+// Choices for "Show results for the last N days"; the API accepts 1..365
+const DAY_OPTIONS = [1, 7, 14, 30, 60, 90, 180, 365];
+
 export default class HistoryGraph extends Component {
     constructor(props) {
         super(props)
@@ -61,16 +64,17 @@ export default class HistoryGraph extends Component {
             this.state.config != this.props.config ||
             this.state.days != this.props.days
         ) {
+            // Process in the callback so the new props are already in this.state
             this.setState({
                 time: this.props.dlUl,
                 fail: this.props.fail,
                 config: this.props.config,
                 days: this.props.days
+            }, () => {
+                if(this.state.config !== null) {
+                    this.processData();
+                }
             });
-
-            if(this.state.config !== null) {
-                this.processData();
-            }
         }
 
         if(
@@ -393,7 +397,11 @@ export default class HistoryGraph extends Component {
                             <div className="text-center">
                                 <div className="d-inline-flex align-items-center mb-2">
                                     <h4 className="d-inline mb-0">Show results for the last</h4>
-                                    <Form.Control id="duDaysInput" className="d-inline-block mx-2" defaultValue={days} onInput={this.updateDays}></Form.Control>
+                                    <Form.Control as="select" id="duDaysInput" className="d-inline-block w-auto mx-2" value={days} onChange={this.updateDays}>
+                                        {DAY_OPTIONS.map(d => (
+                                            <option key={d} value={d}>{d}</option>
+                                        ))}
+                                    </Form.Control>
                                     <h4 className="d-inline mb-0">days</h4>
                                 </div>
                             </div>

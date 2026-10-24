@@ -13,6 +13,7 @@ old=speedtest-upgrade-old
 new=speedtest-upgrade-new
 config="$(mktemp -d)"
 . "$(dirname "$0")/http-checks.sh"
+. "$(dirname "$0")/retention-checks.sh"
 
 cleanup() { docker rm -f "$old" "$new" > /dev/null 2>&1 || true; }
 cleanup
@@ -105,6 +106,9 @@ echo "after upgrade: speedtests=$new_speedtests settings=$new_settings migration
 [ "$new_migrations" -ge "$old_migrations" ] || { echo "FAIL: migrations $old_migrations -> $new_migrations"; fail=1; }
 [ "$marker" = 1 ] || { echo "FAIL: marker row missing"; fail=1; }
 [ "$new_app_key" = "$old_app_key" ] || { echo "FAIL: APP_KEY changed"; fail=1; }
+# After the row checks: the guard checks log an expected ERROR to storage/logs
+echo "== retention (speedtest:prune on a temporary database)"
+check_retention "$new" || { echo "FAIL: retention checks"; fail=1; }
 
 [ "$fail" -eq 0 ] || exit 1
-echo "UPGRADE TEST PASSED: $old_image volume -> $new_image: HTTP 200 for the page, its assets and the API, no PHP fatals, migrations OK, old rows and APP_KEY kept"
+echo "UPGRADE TEST PASSED: $old_image volume -> $new_image: HTTP 200 for the page, its assets and the API, no PHP fatals, migrations OK, old rows and APP_KEY kept, speedtest:prune OK"

@@ -11,6 +11,7 @@ port="${2:-8080}"
 name=speedtest-smoke
 config="$(mktemp -d)"
 . "$(dirname "$0")/http-checks.sh"
+. "$(dirname "$0")/retention-checks.sh"
 
 docker rm -f "$name" > /dev/null 2>&1 || true
 trap 'docker rm -f "$name" > /dev/null 2>&1 || true' EXIT
@@ -69,6 +70,8 @@ PHP
 echo "== assets and API"
 check_http "http://127.0.0.1:$port" || { echo "FAIL: assets or API endpoints"; exit 1; }
 docker exec "$name" test -s /config/speed.db || { echo "FAIL: /config/speed.db missing or empty"; exit 1; }
+echo "== retention (speedtest:prune on a temporary database)"
+check_retention "$name" || { echo "FAIL: retention checks"; exit 1; }
 status="$(docker exec "$name" su-exec abc php /config/www/artisan migrate:status)"
 if ! grep -q 'Yes' <<< "$status" || grep -qE '\|\s*No\s*\|' <<< "$status"; then
     echo "FAIL: migrations did not all run"
@@ -76,4 +79,4 @@ if ! grep -q 'Yes' <<< "$status" || grep -qE '\|\s*No\s*\|' <<< "$status"; then
 fi
 grep -q 'Downloading Speedtest CLI' <<< "$(docker logs "$name" 2>&1)" || { echo "FAIL: Ookla CLI was not downloaded on start"; exit 1; }
 docker exec "$name" test -x /config/www/app/Bin/speedtest || { echo "FAIL: /config/www/app/Bin/speedtest missing"; exit 1; }
-echo "SMOKE TEST PASSED: no Ookla CLI in the image; empty /config -> CLI downloaded, speed.db created, all migrations ran, HTTP 200 on port 80 for the page, its assets and the API"
+echo "SMOKE TEST PASSED: no Ookla CLI in the image; empty /config -> CLI downloaded, speed.db created, all migrations ran, HTTP 200 on port 80 for the page, its assets and the API, days limited to 1..365, speedtest:prune deletes only rows older than 365 days"
